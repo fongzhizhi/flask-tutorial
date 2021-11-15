@@ -50,16 +50,17 @@ def login():
         ).fetchone()
 
         if user is None:
-            error = 'Username is not exsit.'
+            error = 'Incorrect username.'
         elif not check_password_hash(user['password'], password):
-            error = 'Password is incorrect .'
-        
+            error = 'Incorrect password.'
+
         if error is None:
             session.clear()
             session['user_id'] = user['id']
-            return redirect(url_for('index'))
+            return redirect(url_for('blog.index'))
 
         flash(error)
+
     return render_template('auth/login.html')
 
 @bp.before_app_request
@@ -76,7 +77,7 @@ def load_logged_in_user():
 @bp.route('/logout')
 def logout():
     session.clear()
-    return redirect(url_for('index'))
+    return redirect(url_for('blog.index'))
 
 def login_required(view):
     @functools.wraps(view)
